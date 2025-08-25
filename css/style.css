@@ -1,0 +1,550 @@
+/* ========================================================================== */
+/* ROOT + GLOBALS                                                             */
+/* ========================================================================== */
+:root{
+  --bg:#050b11; --glass:#0b1f2cbb;
+  --ink:#d7f1ff; --muted:#9dc7d9; --line:#123445;
+  --cyan:#48e1ff; --teal:#00ffc6; --magenta:#ff3df7;
+  --shadow:0 18px 50px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Roboto,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.container{width:min(1150px,92%);margin-inline:auto}
+
+/* ========================================================================== */
+/* NAVIGATION                                                                 */
+/* ========================================================================== */
+.nav-wrap{position:sticky;top:0;z-index:50;background:rgba(5,11,17,.55);backdrop-filter:saturate(150%) blur(8px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0}
+.brand{display:flex;gap:.6rem;align-items:center;font-weight:900}
+.brand-mark{width:34px;height:34px;filter:drop-shadow(0 0 18px rgba(72,225,255,.35))}
+.nav-links{display:flex;gap:1.2rem;align-items:center}
+.nav-links a{opacity:.9}
+.nav-links a:hover{color:var(--cyan)}
+.btn{display:inline-block;border:1px solid var(--cyan);padding:.6rem 1rem;border-radius:999px;font-weight:700;letter-spacing:.3px;transition:.25s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(72,225,255,.18)}
+.btn-primary{background:linear-gradient(90deg,var(--cyan),var(--magenta));color:#04131a;border-color:transparent}
+.btn-ghost{border-color:var(--line);color:var(--muted)}
+.btn-pill{padding:.5rem .9rem}
+
+.hamburger{display:none;flex-direction:column;gap:5px;background:transparent;border:0;cursor:pointer}
+.hamburger span{width:26px;height:2px;background:var(--ink);transition:.25s}
+.hamburger.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* ========================================================================== */
+/* HERO                                                                       */
+/* ========================================================================== */
+.hero{position:relative;overflow:hidden;padding:3.8rem 0 5rem}
+.grid-bg{position:absolute;inset:-10% -10% 0 -10%;background:
+  radial-gradient(900px 400px at 10% -10%, rgba(0,255,198,.08), transparent 60%),
+  radial-gradient(1100px 500px at 90% 0%, rgba(0,163,255,.06), transparent 70%),
+  repeating-linear-gradient(0deg, rgba(72,225,255,.06), rgba(72,225,255,.06) 1px, transparent 1px, transparent 32px),
+  repeating-linear-gradient(90deg, rgba(0,255,198,.045), rgba(0,255,198,.045) 1px, transparent 1px, transparent 32px);
+  opacity:.45;pointer-events:none}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:center}
+.tag{color:var(--muted);letter-spacing:.2em;font-size:.75rem;margin:0 0 .5rem}
+h1{font-size:clamp(2rem,5.2vw,3.4rem);line-height:1.1;margin:.2rem 0 1rem}
+
+/* Name shimmer (white→cyan→teal, ping‑pong) */
+.accent{
+  background:linear-gradient(90deg,var(--cyan),var(--teal),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:200% 100%;
+  animation:shinePing 8s ease-in-out infinite alternate;
+}
+@keyframes accentShimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+
+/* “Software Development” & similar — cyan⇄magenta, ping‑pong (no hard edge) */
+.shine{
+  background:linear-gradient(90deg,var(--cyan),var(--magenta),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:200% 100%;
+  animation:shinePing 8s ease-in-out infinite alternate;
+}
+@keyframes shinePing{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+
+.lede{color:#bfe1ef;max-width:55ch}
+.hero-actions{display:flex;gap:.8rem;margin-top:1rem}
+.hero-art{position:relative;display:grid;place-items:center}
+
+/* Circle clip for the WebGL so particles never escape */
+#hero3d{
+  position: relative;
+  width: min(480px, 88%);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 70px rgba(72,225,255,.35);
+}
+#hero3d canvas{
+  display:block;width:100%;height:100%;
+  border-radius:inherit;
+  clip-path:circle(49.5% at 50% 50%);
+  -webkit-mask-image: radial-gradient(closest-side, #000 96%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 96%, transparent 100%);
+}
+
+/* ========================================================================== */
+/* PARTICLE WAVE STRIP                                                        */
+/* ========================================================================== */
+#particleWave{
+  --strip-height: clamp(72px, 9vw, 120px);
+  position: relative;
+  width: 100%;
+  height: var(--strip-height);
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 82%, transparent 100%);
+}
+#particleWave::before{
+  content:"";
+  position:absolute; inset:0; z-index:0;
+  background:
+    radial-gradient(900px 400px at 10% -10%, rgba(0,255,198,.06), transparent 60%),
+    radial-gradient(1100px 500px at 90% 0%, rgba(0,163,255,.05), transparent 70%),
+    repeating-linear-gradient(0deg, rgba(72,225,255,.04), rgba(72,225,255,.04) 1px, transparent 1px, transparent 32px),
+    repeating-linear-gradient(90deg, rgba(0,255,198,.03), rgba(0,255,198,.03) 1px, transparent 1px, transparent 32px);
+  pointer-events:none;
+}
+#particleWave canvas{
+  position:absolute; top:0; bottom:0; left:10%; right:5%;
+  width:auto; height:100%; display:block; z-index:1;
+}
+#particleWave + .section::before{content:none}
+
+/* ========================================================================== */
+/* ABOUT SECTION                                                              */
+/* ========================================================================== */
+.about{padding:3.2rem 0 2.6rem}
+.about-main{margin-bottom:2rem}
+.about-rows{display:flex;flex-direction:column;gap:1.2rem}
+.about-row{
+  padding:1.4rem 1.6rem;border-radius:14px;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#0a1f2d,#07151e);
+  border:1px solid var(--line);transition:transform .25s ease, box-shadow .25s ease;
+}
+.about-row:hover{transform:translateY(-3px);box-shadow:0 0 25px rgba(72,225,255,.25)}
+.about-row h3{margin:0 0 .6rem;color:var(--cyan);font-weight:700}
+.glow-bottom::after{
+  content:"";position:absolute;bottom:-30%;left:50%;transform:translateX(-50%);
+  width:120%;height:60%;background:radial-gradient(ellipse at bottom, rgba(72,225,255,.22), transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+/* legacy about grid bits still used elsewhere */
+.about-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:1.2rem}
+.bullets{margin:.8rem 0 1rem}
+.bullets li{margin:.3rem 0;color:var(--muted)}
+.quick-links{display:flex;gap:.6rem;flex-wrap:wrap}
+.chip{border:1px solid var(--cyan);border-radius:999px;padding:.35rem .7rem;transition:.25s}
+.chip:hover{background:linear-gradient(90deg,var(--cyan),var(--teal));color:#04131a;border-color:transparent}
+.mini-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.mini{background:linear-gradient(180deg,#0a1f2d,#07151e);border:1px solid var(--line);border-radius:12px;padding:1rem}
+
+/* ========================================================================== */
+/* SECTIONS / PANELS / REVEAL                                                 */
+/* ========================================================================== */
+.section{position:relative;background:var(--bg)}
+.section::before,.section::after{
+  content:"";position:absolute;left:0;width:100%;height:80px;pointer-events:none;
+  background:linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.25));opacity:.45;
+}
+.section::before{top:-80px;transform:scaleY(-1)}
+.section::after{bottom:-80px}
+.fade-up{opacity:0;transform:translateY(24px);transition:opacity .6s ease, transform .6s ease}
+.fade-up.show{opacity:1;transform:none}
+.panel{background:linear-gradient(180deg,#0a1f2dcc,#07151ed0);border:1px solid var(--line);border-radius:16px;padding:1.2rem;box-shadow:var(--shadow)}
+.glass{backdrop-filter:blur(6px);background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:1rem}
+
+/* ========================================================================== */
+/* SKILLS SECTION                                                             */
+/* ========================================================================== */
+.skills{padding:4.5rem 0}
+
+/* one-column flow; individual panels stack; programming spans full width */
+.skills-grid2{display:grid;grid-template-columns:1fr;gap:1rem}
+
+/* Programming bars */
+.prog-panel{grid-column:1 / -1;padding:1.1rem 1.2rem}
+.prog-panel h3{margin:.2rem 0 .8rem}
+/* -------- Programming rails: label | bar | value -------- */
+.bar-list { display: grid; gap: .9rem; }
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 1fr auto;   /* label left / value right on first line */
+  gap: .4rem .8rem;
+  align-items: center;
+}
+
+.bar-label {
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: .2px;
+  grid-column: 1 / 2;
+}
+
+.bar-val {
+  grid-column: 2 / 3;
+  justify-self: end;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+/* rail sits full width under the label/value row */
+.bar {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 12px;
+  border-radius: 999px;
+  background:
+    linear-gradient(0deg, rgba(255,255,255,.02), rgba(255,255,255,0)) ,
+    linear-gradient(90deg, rgba(72,225,255,.12), rgba(0,0,0,0));
+  border: 1px solid rgba(18,52,69,.65);
+  overflow: hidden;
+}
+
+/* animated cyan→teal shimmer (same motion as your text) */
+/* fill segment */
+.bar span{
+  position:absolute;
+  top:0; bottom:0; left:0; right:auto;
+  /* never 0 width; clamp ensures at least 8px if --val is missing */
+  width:clamp(8px, var(--val, 0%), 100%);
+  border-radius:inherit;
+
+  /* cyan→teal shimmer like headers */
+  background:linear-gradient(90deg, var(--cyan), var(--teal), var(--cyan));
+  background-size:200% 100%;
+  animation:shinePing 8s ease-in-out infinite alternate;
+
+  box-shadow:
+    inset 0 0 10px rgba(72,225,255,.35),
+    0 0 14px rgba(72,225,255,.18);
+}
+
+
+/* ===== SKILLS: Doughnut charts ===== */
+.chart-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(260px, 1fr));
+  gap:2rem;
+}
+.chart-card{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:1rem;
+  background:
+    radial-gradient(800px 400px at 10% 0%, rgba(72,225,255,.08), transparent 60%),
+    radial-gradient(800px 400px at 90% 0%, rgba(0,255,198,.06), transparent 60%),
+    linear-gradient(#07141d,#061019);
+  box-shadow:var(--shadow);
+  position:relative;
+}
+.chart-card h4{ margin:.1rem 0 .6rem; color:var(--ink); }
+.chart-card canvas{ display:block; width:100%; height:auto; filter:drop-shadow(0 0 18px rgba(72,225,255,.12)); }
+
+.chart-legend{
+  margin-top:.6rem;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.45rem .7rem;
+  list-style:none; padding:0;
+}
+.chart-legend li{
+  display:flex; align-items:center; justify-content:space-between;
+  background:#071621; border:1px solid var(--line);
+  padding:.4rem .6rem; border-radius:10px;
+}
+.chart-legend li i{
+  width:10px; height:10px; border-radius:50%; margin-right:.6rem;
+  filter: drop-shadow(0 0 8px rgba(72,225,255,.2));
+}
+.chart-legend li span{ color:var(--ink); opacity:.9; margin-right:auto; }
+.chart-legend li b{ color:var(--ink); font-weight:800; }
+
+@media (max-width: 820px){
+  .chart-grid{ grid-template-columns:1fr; }
+}
+
+/* Keep the two charts from spanning full width */
+.prog-panel .chart-grid{
+  max-width: 980px;       /* similar to other content rows */
+  margin-inline: auto;    /* center inside the panel */
+}
+
+/* Optional: keep each chart from growing too wide on big screens */
+.prog-panel .chart-card{ max-width: 480px; }
+
+/* Mobile: fall back to one chart per row naturally via your existing @media */
+
+/* rounded “cap” at the leading end like your reference */
+.bar span::after{
+  content:"";
+  position:absolute;
+  right:-6px; top:50%;
+  width:12px; height:12px;
+  border-radius:50%;
+  transform:translateY(-50%);
+  background: radial-gradient(circle at 30% 30%,
+             rgba(255,255,255,.35), rgba(255,255,255,.05) 55%, transparent 60%);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.06),
+    0 2px 10px rgba(72,225,255,.28);
+}
+
+/* make the pill look a tad inset like the screenshot */
+.prog-panel .bar {
+  background-color: #0a1620;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Responsive: keep rails readable on phones */
+@media (max-width: 560px){
+  .bar-row { gap: .3rem .6rem; }
+  .bar-val { font-size: .95rem; }
+}
+
+/* two-column panels with left visual + right content */
+.two-col{
+  display:grid;grid-template-columns:300px 1fr;gap:1rem;align-items:stretch;
+}
+
+/* Visual slot */
+.viz-slot{
+  position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  background:
+    radial-gradient(800px 400px at 10% 0%, rgba(72,225,255,.08), transparent 60%),
+    radial-gradient(800px 400px at 90% 0%, rgba(0,255,198,.06), transparent 60%),
+    linear-gradient(#07141d,#061019);
+  box-shadow:var(--shadow);
+}
+.viz-slot::after{
+  content:"";position:absolute;inset:10px;border:1px solid rgba(18,52,69,.35);
+  border-radius:10px;pointer-events:none;
+}
+.viz-slot::before{
+  content:"";position:absolute;left:50%;bottom:-30%;transform:translateX(-50%);
+  width:120%;height:65%;background:radial-gradient(ellipse at bottom, rgba(72,225,255,.22), transparent 70%);
+  pointer-events:none;
+}
+.viz-head{position:absolute;top:8px;left:12px;font-size:.85rem;color:var(--muted);z-index:1}
+.skill-visual{display:block;width:100%;height:200px;filter:drop-shadow(0 0 18px rgba(72,225,255,.12))}
+
+/* Right-side content */
+.group-body h3{margin:.2rem 0 .7rem}
+.group-body h3.sub{margin-top:1rem}
+
+/* Tiles */
+.tile-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:.6rem;
+}
+.tile{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:38px;padding:0 .9rem;border-radius:12px;
+  border:1px solid var(--line);background:#071621;color:var(--ink);
+  font-weight:600;letter-spacing:.2px;transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.tile:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 8px 24px rgba(72,225,255,.14)}
+.tile.outline{border-style:dashed;color:var(--muted)}
+
+/* SKILLS: row spacing + clean stack */
+.skills-grid2 { gap: 1.2rem; }        /* more breathing room between panels */
+.skill-row { margin: 0; }             /* ensure no collapsed margins cause touching */
+
+/* Two-column visuals (left) already defined for .two-col, just unify sizes here */
+.two-col { grid-template-columns: 300px 1fr; gap: 1rem; }
+.skill-visual { height: 200px; }      /* consistent visual height per row */
+
+/* Safety: remove any legacy grids that might leak “random text” from old markup */
+.viz-grid, .right-col { display: none !important; }
+
+
+/* ===== Spacing for the Skills stack ===== */
+:root { --skills-gap: 1.25rem; }              /* tweak this value to taste */
+
+.skills-stack { row-gap: var(--skills-gap); } /* space between panels */
+
+/* Fallback in case any panels are not inside .skills-stack */
+#skills .skill-row + .skill-row { margin-top: var(--skills-gap); }
+
+/* A bit more room inside the CAD/Robotics/App cards */
+.two-col { gap: 1.2rem; }                     /* space between left viz + right content */
+
+/* Slightly larger bottom padding so borders don’t feel tight */
+#skills .panel { padding-bottom: 1.4rem; }
+
+/* Extra breathing room around the charts row */
+.prog-panel .chart-grid { margin: .5rem auto; gap: 1rem; }
+
+
+/* ========================================================================== */
+/* PROJECTS                                                                   */
+/* ========================================================================== */
+.projects{padding:4.5rem 0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.card{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#061019;transform-style:preserve-3d;transition:transform .15s ease}
+.card img{height:220px;object-fit:cover;filter:grayscale(10%) contrast(108%);opacity:.92;transition:.3s}
+.card-info{position:absolute;inset:auto 0 0 0;padding:.9rem;background:linear-gradient(180deg,transparent,rgba(0,0,0,.65))}
+.card h4{margin:.1rem 0 .2rem}
+.tag-mini{font-size:.8rem;color:var(--cyan)}
+.card:hover img{transform:scale(1.04);opacity:1}
+.interests{margin-top:1.2rem}
+
+/* === SNAP carousel (3/2/1 exact, no peek) === */
+.snap3{
+  --gap: 1.25rem;
+  --arrow-gutter: 76px;
+  position: relative;
+  padding: 30px var(--arrow-gutter) 28px;
+  border-radius: 16px;
+}
+
+/* The viewport is the scroller + clipper */
+.snap3 .snap-viewport{
+  overflow-x: auto;            /* scroll by JS; user scroll also fine */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;       /* Firefox hide bar */
+}
+.snap3 .snap-viewport::-webkit-scrollbar{ display:none; } /* WebKit hide */
+
+/* Track is sized to the viewport (100%), columns are based on THAT width */
+.snap3 .snap-track{
+  width: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  gap: var(--gap);
+  grid-auto-columns: calc((100% - (var(--gap) * 2)) / 3); /* 3-up */
+  scroll-snap-type: x mandatory;
+}
+
+/* Cards (reuse your .quote.glass look) */
+.snap3 .snap-track > .quote{
+  scroll-snap-align: start;
+  min-width: 0;
+  border-radius: 14px;
+}
+
+/* Arrows sit in gutters (not over cards) */
+.snap3 .snap-btn{
+  position: absolute; top: 50%; transform: translateY(-50%);
+  z-index: 2; cursor: pointer;
+  background: transparent; border:1px solid var(--line);
+  border-radius:999px; padding:.4rem .55rem;
+}
+.snap3 .snap-btn.left{  left: calc(var(--arrow-gutter) - 54px); }
+.snap3 .snap-btn.right{ right: calc(var(--arrow-gutter) - 54px); }
+
+/* 2-up, then 1-up */
+@media (max-width: 900px){
+  .snap3 .snap-track{ grid-auto-columns: calc((100% - var(--gap)) / 2); }
+}
+@media (max-width: 640px){
+  .snap3{ --arrow-gutter: 56px; }
+  .snap3 .snap-track{ grid-auto-columns: 100%; }
+}
+
+/* Keep category colors (from your theme) */
+.quote .proj-sig{ font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+.proj-sig.cat-drones{ color: var(--cyan); }
+.proj-sig.cat-cvai  { color: var(--magenta); }
+.proj-sig.cat-devkit{ color: var(--teal); }
+.proj-sig.cat-tools { color: #7fe8ff; }
+
+
+/* ========================================================================== */
+/* EXAMPLES                                                                   */
+/* ========================================================================== */
+.examples{padding:3rem 0}
+.row-title{margin:2.2rem 0 1rem}
+.info-split{display:grid;grid-template-columns:1.1fr .9fr;gap:1rem;align-items:center;margin-bottom:2rem}
+.img-wireframe{
+  aspect-ratio:16/10;border-radius:14px;border:1px solid var(--line);
+  background:
+    radial-gradient(600px 300px at 20% 0%, rgba(72,225,255,.12), transparent 60%),
+    radial-gradient(600px 300px at 80% 0%, rgba(0,255,198,.10), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.25));
+  filter:contrast(110%) saturate(110%);
+}
+.info-split .info p{color:#bfe1ef;max-width:60ch}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.kpi{display:grid;gap:.4rem;align-content:center;justify-items:start;height:120px}
+.kpi-ico{font-size:1.2rem;opacity:.7}
+.kpi-title{font-weight:700}
+.testimonials{position:relative;overflow:hidden}
+.ts-btn{position:absolute;top:50%;transform:translateY(-50%);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.4rem .55rem;cursor:pointer}
+.ts-btn.left{left:.6rem}
+.ts-btn.right{right:.6rem}
+.ts-track{--i:0;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:1rem;transition:transform .45s ease;transform:translateX(calc(var(--i)*-100%))}
+.quote{padding:1.2rem}
+.quote .stars{color:var(--teal);letter-spacing:.2rem;margin-bottom:.4rem}
+.quote p{color:#cfe9f6}
+.quote .sig{margin-top:.8rem;color:var(--muted);font-size:.85rem}
+.ts-dots{display:flex;gap:.35rem;justify-content:center;margin-top:.7rem}
+.ts-dots button{width:8px;height:8px;border-radius:50%;border:0;background:#103040}
+.ts-dots button.active{background:var(--cyan)}
+
+/* ========================================================================== */
+/* CONTACT                                                                    */
+/* ========================================================================== */
+.contact{padding:3rem 0}
+.contact-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:1rem;align-items:center}
+.circuit-strip{position:relative;height:90px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:24px 0}
+.contact-actions{display:flex;gap:.8rem;justify-content:flex-end}
+.footer{margin-top:2rem;border-top:1px solid var(--line);padding:1rem 0;background:#061019}
+.foot{display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+.dots i{display:inline-block;width:6px;height:6px;margin-left:.35rem;background:var(--line);border-radius:50%}
+
+/* ========================================================================== */
+/* CURSOR GLOW                                                                */
+/* ========================================================================== */
+/*.cursor-glow{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(180px 180px at var(--x,50%) var(--y,50%), rgba(72,225,255,.10), transparent 60%)}
+*/
+
+/* ========================================================================== */
+/* TYPOGRAPHY                                                                 */
+/* ========================================================================== */
+h2{font-size:clamp(1.6rem,3.4vw,2.2rem);margin:.1rem 0 1rem}
+p{line-height:1.6}
+
+/* ========================================================================== */
+/* PARTICLE OVERLAYS (utility hosts)                                          */
+/* ========================================================================== */
+.rp-host{position:relative}
+.rp-overlay{position:absolute;z-index:2;pointer-events:none;filter:drop-shadow(0 0 22px rgba(72,225,255,.18))}
+
+/* ========================================================================== */
+/* RESPONSIVE MEDIA QUERIES                                                   */
+/* ========================================================================== */
+@media (max-width:1100px){
+  .info-split{grid-template-columns:1fr}
+}
+@media (max-width:980px){
+  .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:900px){
+  .two-col{grid-template-columns:1fr}
+  .skill-visual{height:160px}
+}
+@media (max-width:720px){
+  .nav-links{position:fixed;inset:58px 0 auto 0;background:#07131c;border-bottom:1px solid var(--line);
+    display:block;transform:translateY(-120%);transition:.25s;padding:1rem}
+  .nav-links.open{transform:translateY(0)}
+  .nav-links a{display:block;padding:.7rem 0;border-bottom:1px dashed var(--line)}
+  .nav-links .btn{margin-top:.6rem;width:100%}
+  .hamburger{display:flex}
+  .grid{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:1fr}
+}

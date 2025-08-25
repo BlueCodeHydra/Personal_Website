@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Michael Dowling — Portfolio</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+  <!-- Floating cursor glow -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- NAV -->
+  <header class="nav-wrap">
+    <div class="container nav">
+      <a class="brand" href="#home">
+        <img src="assets/images/Personal_Logo2.png" alt="Dragon logo" class="brand-mark">
+        <span>Michael&nbsp;Dowling</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#examples">Examples</a>
+        <a href="#contact">Contact</a>
+        <a class="btn btn-pill" href="Resume_2024_MichaelDowling.pdf" download>Resume</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO (keeps grid) -->
+  <section id="home" class="hero">
+    <div class="grid-bg"></div>
+
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="tag">FULL-STACK • ROBOTICS • SYSTEMS</p>
+        <h1>
+          Hi, I’m <span class="accent">Michael</span>.<br/>
+          I enjoy <span class="shine">Software Development</span> for integration with <span class="shine">hardware</span>.
+        </h1>
+        <p class="lede">
+          Robotics, drones, web + native apps, cameras, clean GUI development, and testable systems.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#projects">View Work</a>
+          <a class="btn btn-ghost" href="#contact">Contact</a>
+        </div>
+      </div>
+
+      <!-- Three.js mounts here (clipped to a perfect circle) -->
+      <div class="hero-art">
+        <div id="hero3d" aria-label="Dragon logo 3D animation"></div>
+      </div>
+    </div>
+  </section>
+
+<!-- Thin particle wave -->
+<section id="particleWave"></section>
+
+    <!-- ABOUT -->
+    <section id="about" class="about section fade-up reveal-pixels">
+    <div class="container">
+        <div class="panel about-main">
+        <h2>About <span class="accent">Me</span></h2>
+        <p>
+            I’m a developer who loves the crossroads where UI meets devices. 
+            Give me a camera feed, an API, a microcontroller, or a tricky network—
+            and I’ll make something cool and useful.
+        </p>
+        <ul class="bullets">
+            <li>Computer Science B.S. • Florida Tech — 2024</li>
+            <li>Best in Show (Senior Design) — TEC-V Underwater ROV</li>
+            <li>Based in Melbourne, FL</li>
+        </ul>
+        <div class="quick-links">
+            <a class="chip" href="Resume_2024_MichaelDowling.pdf" download>Download Résumé</a>
+            <a class="chip" target="_blank" rel="noopener" href="https://www.linkedin.com/in/michael-dowling-a8a46a225">LinkedIn</a>
+            <a class="chip" href="mailto:mjd0613@gmail.com">mjd0613@gmail.com</a>
+        </div>
+        </div>
+
+        <!-- Row cards instead of columns -->
+        <div class="about-rows">
+        <div class="about-row panel glow-bottom">
+            <h3>Passion</h3>
+            <p>I’m a hobbyist who loves robotics—whether it’s tinkering with sensors, wiring motors, or programming movement.</p>
+        </div>
+        <div class="about-row panel glow-bottom">
+            <h3>What I Enjoy</h3>
+            <p>Building small bots, experimenting with drones, and making tech projects come alive with code and hardware.</p>
+        </div>
+        <div class="about-row panel glow-bottom">
+            <h3>Looking Ahead</h3>
+            <p>Exploring AI-driven robotics, edge devices, and custom PCBs to push my projects to the next level.</p>
+        </div>
+        </div>
+    </div>
+
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="skills section fade-up reveal-pixels">
+    <div class="container">
+        <h2><span class="accent">Skills</span> & Capabilities</h2>
+
+        <div class="skills-stack">
+        <!-- Programming — OOP vs Non-OOP doughnut charts -->
+        <div class="panel prog-panel skill-row">
+            <h3>Programming — OOP vs Non-OOP</h3>
+            <div class="chart-grid">
+            <div class="chart-card">
+                <h4>Object-Oriented</h4>
+                <canvas id="oopPie" width="260" height="260"></canvas>
+                <ul class="chart-legend" id="oopLegend"></ul>
+            </div>
+
+            <div class="chart-card">
+                <h4>Non-OOP / Markup</h4>
+                <canvas id="nonOopPie" width="260" height="260"></canvas>
+                <ul class="chart-legend" id="nonOopLegend"></ul>
+            </div>
+            </div>
+        </div>
+
+        <!-- CAD & Graphics -->
+        <div class="panel two-col skill-row">
+            <div class="viz-slot">
+            <div class="viz-head">CAD Visual: Need to ADD</div>
+            <canvas id="cad-visual" class="skill-visual" aria-hidden="true"></canvas>
+            </div>
+            <div class="group-body">
+            <h3>CAD & Graphics</h3>
+            <div class="tile-grid">
+                <button class="tile">SolidWorks</button>
+                <button class="tile">Inventor</button>
+                <button class="tile">Fusion 360</button>
+                <button class="tile">AutoCAD</button>
+                <button class="tile">Unity implementations</button>
+                <button class="tile">UI shaders & overlays</button>
+            </div>
+            </div>
+        </div>
+
+        <!-- Robotics -->
+        <div class="panel two-col skill-row">
+            <div class="viz-slot">
+            <div class="viz-head">Robotics Visual: Need to ADD</div>
+            <canvas id="robo-visual" class="skill-visual" aria-hidden="true"></canvas>
+            </div>
+            <div class="group-body">
+            <h3>Robotics</h3>
+            <div class="tile-grid">
+                <button class="tile">Multirotors: build/program/design</button>
+                <button class="tile">Fixed-wings: build/program/design</button>
+                <button class="tile">Camera integration & CV</button>
+                <button class="tile">Software↔hardware testing</button>
+            </div>
+            </div>
+        </div>
+
+        <!-- Apps & Web -->
+        <div class="panel two-col skill-row">
+            <div class="viz-slot">
+            <div class="viz-head">Apps Visual: Need to ADD</div>
+            <canvas id="apps-visual" class="skill-visual" aria-hidden="true"></canvas>
+            </div>
+            <div class="group-body">
+            <h3>Apps & Web</h3>
+            <div class="tile-grid">
+                <button class="tile">Website development</button>
+                <button class="tile">WinForms applications</button>
+                <button class="tile">WPF applications</button>
+                <button class="tile">API design & integration</button>
+            </div>
+            </div>
+        </div>
+
+        <!-- Servers & Networks -->
+        <div class="panel two-col skill-row">
+            <div class="viz-slot">
+            <div class="viz-head">Networks Visual: Need to ADD</div>
+            <canvas id="net-visual" class="skill-visual" aria-hidden="true"></canvas>
+            </div>
+            <div class="group-body">
+            <h3>Servers & Networks</h3>
+            <div class="tile-grid">
+                <button class="tile">Server creation</button>
+                <button class="tile">Topology & hardening</button>
+                <button class="tile">Security</button>
+            </div>
+            </div>
+        </div>
+
+        <!-- Preferred Tools -->
+        <div class="panel two-col skill-row">
+            <div class="viz-slot">
+            <div class="viz-head">Tools Visual: Need to ADD</div>
+            <canvas id="tools-visual" class="skill-visual" aria-hidden="true"></canvas>
+            </div>
+            <div class="group-body">
+            <h3>Preferred Tools</h3>
+            <div class="tile-grid">
+                <button class="tile">Visual Studio</button>
+                <button class="tile">VS Code</button>
+                <button class="tile">GitHub</button>
+                <button class="tile">Docker</button>
+                <button class="tile">Windows</button>
+                <button class="tile outline">Always learning</button>
+            </div>
+            </div>
+        </div>
+        </div><!-- /skills-stack -->
+    </div><!-- /container -->
+    </section><!-- /skills -->
+
+
+
+  <!-- PROJECTS -->
+  <section id="projects" class="projects section fade-up reveal-pixels">
+    <div class="container">
+      <h2>Selected <span class="accent">Projects</span></h2>
+      <div class="grid">
+        <a class="card tilt" href="#">
+          <img src="assets/images/TecV/TecV1.png" alt="">
+          <div class="card-info">
+            <h4>TEC‑V Underwater Robot</h4>
+            <p>ROV sonar ingestion ➜ 3D point‑cloud viewer + project web hub.</p>
+            <span class="tag-mini">ROV • Web • 3D</span>
+          </div>
+        </a>
+        <a class="card tilt" href="#">
+          <img src="" alt="">
+          <div class="card-info">
+            <h4>Quadruped Robots</h4>
+            <p>Gait control, balance loops, and radio/vision control links.</p>
+            <span class="tag-mini">C++ • Control</span>
+          </div>
+        </a>
+        <a class="card tilt" href="#">
+          <img src="" alt="">
+          <div class="card-info">
+            <h4>SLAM Experiments</h4>
+            <p>Indoor mapping & localization protos with custom viz.</p>
+            <span class="tag-mini">CV • Mapping</span>
+          </div>
+        </a>
+        <a class="card tilt" href="#">
+          <img src="" alt="">
+          <div class="card-info">
+            <h4>Mini Sub</h4>
+            <p>Compact ROV platform — thruster control + telemetry UI.</p>
+            <span class="tag-mini">Embedded • UI</span>
+          </div>
+        </a>
+        <a class="card tilt" href="#">
+          <img src="" alt="">
+          <div class="card-info">
+            <h4>Bootable Drive Imager</h4>
+            <p>Turn‑key USB tool to clone, verify, and log disk images.</p>
+            <span class="tag-mini">Win • Utilities</span>
+          </div>
+        </a>
+        <a class="card tilt" href="#">
+          <img src="" alt="">
+          <div class="card-info">
+            <h4>Dynamic Checkers (AI)</h4>
+            <p>Difficulty‑scaled agent on variable‑size boards.</p>
+            <span class="tag-mini">AI • Game</span>
+          </div>
+        </a>
+      </div>
+
+
+    <h3 class="row-title">Project Ideas <span class="accent">/ Next Up</span></h3>
+
+    <div class="panel carousel-3" id="ideasCarousel">
+    <button class="ts-btn left" id="projPrev" aria-label="Previous">←</button>
+
+        <!-- Snap carousel: 3 / 2 / 1 per view, no peek -->
+        <div class="panel snap3" id="ideasSnap">
+        <button class="snap-btn left" id="snapPrev" aria-label="Previous">←</button>
+
+        <div class="snap-viewport">
+            <div class="snap-track" id="snapTrack">
+            <!-- Use your own items; keeping your look with .quote.glass -->
+            <article class="quote glass">
+                <p>Computer-controlled drone with one-click firmware upload.</p>
+                <div class="proj-sig cat-drones">CATEGORY — DRONES</div>
+            </article>
+            <article class="quote glass">
+                <p>Drone swarm choreography with sync cues & collision bubbles.</p>
+                <div class="proj-sig cat-drones">CATEGORY — DRONES</div>
+            </article>
+            <article class="quote glass">
+                <p>Monocular SLAM pathing using only camera references.</p>
+                <div class="proj-sig cat-cvai">CATEGORY — CV/AI</div>
+            </article>
+            <article class="quote glass">
+                <p>Dev-board workstation: case with integrated screen & keyboard dock.</p>
+                <div class="proj-sig cat-devkit">CATEGORY — DEV KIT</div>
+            </article>
+            <article class="quote glass">
+                <p>Realtime telemetry dashboard for Pixhawk flight controller.</p>
+                <div class="proj-sig cat-drones">CATEGORY — DRONES</div>
+            </article>
+            <article class="quote glass">
+                <p>Autonomous VTOL drone with guided takeoff and landing.</p>
+                <div class="proj-sig cat-drones">CATEGORY — DRONES</div>
+            </article>
+            <article class="quote glass">
+                <p>Edge CV on Jetson: multi-cam ingest with GStreamer and overlays.</p>
+                <div class="proj-sig cat-cvai">CATEGORY — CV/AI</div>
+            </article>
+            <article class="quote glass">
+                <p>Flight “black box” importer + analytics: plots, faults, heatmaps.</p>
+                <div class="proj-sig cat-tools">CATEGORY — TOOLS</div>
+            </article>
+            <article class="quote glass">
+                <p>Ground station: map overlay + video mux + mission timeline.</p>
+                <div class="proj-sig cat-drones">CATEGORY — DRONES</div>
+            </article>
+            </div>
+        </div>
+
+        <button class="snap-btn right" id="snapNext" aria-label="Next">→</button>
+        <div class="ts-dots" id="snapDots"></div>
+        </div>
+
+  </section>
+
+  <!-- Play-with EXAMPLES (like your circled screenshots) -->
+  <section id="examples" class="examples section fade-up">
+    <div class="container">
+    <div class="info-split panel">
+        <div class="img-wireframe">
+        <img src="assets/images/TecV/D1.jpg" alt="Screenshot of project" />
+        </div>
+        <div class="info">
+        <h2>EXAMPLE PROJECT CARD <span class="accent">Project Name</span></h2>
+        <p>Brief info about the project goes here — what it does, tech used, etc.</p>
+        <a class="btn btn-ghost" href="project-page.html">View Project →</a>
+        </div>
+    </div>
+
+    <div>
+      <h3 class="row-title">EXAMPLE INFO STUFF<span class="accent">risk</span></h3>
+      <div class="kpi-grid">
+        <div class="kpi glass"><div class="kpi-ico">◆</div><div class="kpi-title">ITEM 1</div></div>
+        <div class="kpi glass"><div class="kpi-ico">◇</div><div class="kpi-title">ITEM 2</div></div>
+        <div class="kpi glass"><div class="kpi-ico">⬢</div><div class="kpi-title">ITEM 3</div></div>
+        <div class="kpi glass"><div class="kpi-ico">⬡</div><div class="kpi-title">ITEM 4</div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact section fade-up">
+    <div class="container contact-grid panel">
+      <div>
+        <h2><span class="accent">Contact Me</span></h2>
+        <p>Quickest path: email.</p>
+      </div>
+      <div class="contact-actions">
+        <a class="btn btn-primary" href="mailto:mjd0613@gmail.com">Email Me</a>
+        <a class="btn btn-ghost" target="_blank" rel="noopener" href="https://www.linkedin.com/in/michael-dowling-a8a46a225">LinkedIn</a>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container foot">
+        <span>© 2025 Michael Dowling</span>
+        <span class="dots"><i></i><i></i><i></i><i></i></span>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ===== Site JS ===== -->
+  <script>
+    // hamburger
+    const hamburger = document.getElementById('hamburger');
+    const navLinks  = document.getElementById('navLinks');
+    hamburger.addEventListener('click', ()=>{hamburger.classList.toggle('active');navLinks.classList.toggle('open');});
+
+    // animated skill bars
+    const barObs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.style.setProperty('--val', e.target.dataset.val);
+          barObs.unobserve(e.target);
+        }
+      })
+    },{threshold:.35});
+    document.querySelectorAll('.bar span').forEach(s=>barObs.observe(s));
+
+    // card tilt
+    document.querySelectorAll('.tilt').forEach(card=>{
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=e.clientX-r.left, y=e.clientY-r.top;
+        const rx=((y/r.height)-.5)*8, ry=((x/r.width)-.5)*-8;
+        card.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
+      card.addEventListener('mouseleave',()=>card.style.transform='');
+    });
+
+    // cursor glow
+    const glow=document.getElementById('cursorGlow');
+    window.addEventListener('pointermove',e=>{
+      glow.style.setProperty('--x', e.clientX+'px');
+      glow.style.setProperty('--y', e.clientY+'px');
+    });
+
+    // section fade-up
+    const revealObs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('show'); revealObs.unobserve(e.target);} });
+    },{rootMargin:"0px 0px -10% 0px", threshold:.15});
+    document.querySelectorAll('.fade-up').forEach(el=>revealObs.observe(el));
+  </script>
+
+  <!-- Three.js logo scene (particles build/shake/exit loop) -->
+  <script type="module" src="js/logoScene.js"></script>
+  <!-- Particle header animation -->
+  <script type="module" src="js/particleWave.js"></script>
+  <!-- Particle reveal for sections -->
+  <script type="module" src="js/revealParticles.js"></script>
+  <!-- skills-charts -->
+  <script src="js/skills-charts.js" defer></script>
+
+
+<script>
+(() => {
+  const wrap  = document.getElementById('ideasSnap');
+  if (!wrap) return;
+
+  const viewport = wrap.querySelector('.snap-viewport');
+  const track    = document.getElementById('snapTrack');
+  const prev     = document.getElementById('snapPrev');
+  const next     = document.getElementById('snapNext');
+  const dotsWrap = document.getElementById('snapDots');
+
+  const cards = Array.from(track.children);
+  const mq1 = matchMedia('(max-width: 640px)');
+  const mq2 = matchMedia('(max-width: 900px)');
+  const perView = () => (mq1.matches ? 1 : mq2.matches ? 2 : 3);
+
+  let per  = perView();
+  let pages = Math.ceil(cards.length / per);
+  let page  = 0;
+
+  function gapPx() {
+    const cs = getComputedStyle(track);
+    // grid gap may report as column-gap or gap depending on browser
+    const g = parseFloat(cs.columnGap || cs.gap || '0') || 0;
+    return g;
+  }
+
+  function stride() {
+    // width of one card + gap
+    const w = cards[0]?.getBoundingClientRect().width || 0;
+    return w + gapPx();
+  }
+
+  function maxLeft() {
+    return Math.max(0, track.scrollWidth - viewport.clientWidth);
+  }
+
+  function offsetFor(n) {
+    // distance per page = stride * perView
+    const off = n * stride() * per;
+    return Math.min(off, maxLeft());
+  }
+
+  function buildDots(){
+    dotsWrap.innerHTML = '';
+    for (let i = 0; i < pages; i++){
+      const b = document.createElement('button');
+      if (i === page) b.classList.add('active');
+      b.onclick = () => go(i);
+      dotsWrap.appendChild(b);
+    }
+  }
+
+  function go(n){
+    page = (n + pages) % pages;
+    viewport.scrollTo({ left: offsetFor(page), behavior: 'smooth' });
+    [...dotsWrap.children].forEach((b,i)=>b.classList.toggle('active', i === page));
+  }
+
+  function recalc(){
+    per   = perView();
+    pages = Math.ceil(cards.length / per);
+    page  = Math.min(page, pages - 1);
+    buildDots();
+    // snap to the clamped offset for the current page
+    viewport.scrollLeft = offsetFor(page);
+  }
+
+  prev.addEventListener('click', ()=> go(page - 1));
+  next.addEventListener('click', ()=> go(page + 1));
+  addEventListener('resize', recalc);
+
+  // init
+  viewport.scrollLeft = 0;
+  recalc();
+})();
+</script>
+
+
+</body>
+</html>
