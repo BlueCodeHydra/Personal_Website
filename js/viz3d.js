@@ -1,64 +1,141 @@
 // js/viz3d.js
+// One Three.js viewer used by the Skills canvases.
+// - Drag to rotate (OrbitControls)
+// - Wheel/pinch zoom
+// - Auto-center + fit so the model fills the canvas
+// - Optional auto-rotate resumes after user inactivity
+//
+// Requires the import map in index.html that maps "three" and "three/addons/*"
+// to the same version (already present in your page).
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader }  from 'three/addons/loaders/GLTFLoader.js';
+import { GLTFLoader }   from 'three/addons/loaders/GLTFLoader.js';
+import { OBJLoader }    from 'three/addons/loaders/OBJLoader.js';
 
-function mountGLB(canvasId, glbUrl, { autoRotate=true, rotateSpeed=0.6 } = {}) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return;
+function makeViewer(canvas, modelUrl, opts = {}) {
+  const {
+    fov = 38,
+    autoRotateAfterIdleMs = 3500,   // start gentle orbit if user stops interacting
+    autoRotateSpeed = 0.5,
+    allowPan = false                // keep camera centered by default
+  } = opts;
 
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  // Renderer / Scene / Camera
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  const scene    = new THREE.Scene();
+  const camera   = new THREE.PerspectiveCamera(fov, 1, 0.01, 5000);
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-  camera.position.set(2.4, 1.6, 3.0);
+  // Lights tuned for dark theme
+  scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+  const key = new THREE.DirectionalLight(0xffffff, 1.0);
+  key.position.set(3, 4, 5);
+  scene.add(key);
 
-  const key  = new THREE.DirectionalLight(0x9beaff, 1.0); key.position.set(4,6,8);
-  const fill = new THREE.DirectionalLight(0x00ffc6, 0.6); fill.position.set(-6,3,-4);
-  const rim  = new THREE.DirectionalLight(0x48e1ff, 0.5); rim.position.set(-2,5,6);
-  scene.add(key, fill, rim, new THREE.AmbientLight(0x335a6a, 0.6));
-
-  const controls = new OrbitControls(camera, canvas);
+  // Orbit controls: rotate (drag), zoom, optional pan
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableRotate = true;              // drag to orbit
+  controls.enableZoom   = true;              // wheel / pinch
+  controls.enablePan    = !!allowPan;        // usually nicer off in these slots
+  controls.zoomSpeed    = 0.85;
   controls.enableDamping = true;
-  controls.enablePan = false;
-  controls.autoRotate = autoRotate;
-  controls.autoRotateSpeed = rotateSpeed;
-  controls.minDistance = 5;
-  controls.maxDistance = 1.1;
+  controls.dampingFactor = 0.08;
+  controls.autoRotate = false;               // we’ll enable after idle
+  controls.autoRotateSpeed = autoRotateSpeed;
 
-  function resize(){
-    const r = canvas.getBoundingClientRect();
-    const w = Math.max(1, r.width|0), h = Math.max(1, r.height|0);
+  // Prevent page scroll while zooming on canvas
+  renderer.domElement.addEventListener('wheel', e => e.preventDefault(), { passive: false });
+
+  // Responsive + HiDPI
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = canvas.clientWidth | 0;
+    const h = canvas.clientHeight | 0;
+    renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);
-    camera.aspect = w / h; camera.updateProjectionMatrix();
+    camera.aspect = (h === 0 ? 1 : w / h);
+    camera.updateProjectionMatrix();
   }
-  resize(); addEventListener('resize', resize);
+  resize();
+  addEventListener('resize', resize);
 
-  const loader = new GLTFLoader();
-  loader.load(glbUrl, (gltf)=>{
-    const root = gltf.scene;
-    const box  = new THREE.Box3().setFromObject(root);
-    const c    = box.getCenter(new THREE.Vector3());
-    root.position.sub(c);
-    const size = box.getSize(new THREE.Vector3()).length() || 1;
-    root.scale.setScalar(2.2 / size);
-    // If model looks on its side, uncomment:
-    // root.rotation.x = -Math.PI/2;
-    scene.add(root);
-  }, undefined, (e)=>console.error('GLB load error', glbUrl, e));
+  // Idle auto-rotate: pause on interaction, resume after N ms
+  let idleTimer = null;
+  function kickIdleTimer() {
+    controls.autoRotate = false;
+    if (idleTimer) clearTimeout(idleTimer);
+    if (autoRotateAfterIdleMs > 0) {
+      idleTimer = setTimeout(() => { controls.autoRotate = true; }, autoRotateAfterIdleMs);
+    }
+  }
+  ['pointerdown','pointermove','wheel','touchstart','touchmove'].forEach(evt =>
+    renderer.domElement.addEventListener(evt, kickIdleTimer, { passive:true })
+  );
+  kickIdleTimer(); // start the timer
 
-  (function tick(){
+  // Load model (GLB/GLTF or OBJ)
+  const lower = (modelUrl || '').toLowerCase();
+  const isGLB = lower.endsWith('.glb') || lower.endsWith('.gltf');
+  const loader = isGLB ? new GLTFLoader() : new OBJLoader();
+
+  loader.load(modelUrl, (asset) => {
+    const object = isGLB ? (asset.scene || asset.scenes?.[0]) : asset;
+    if (!object) { console.error('[viz3d] Empty model:', modelUrl); return; }
+
+    // Center, fit, and set zoom bounds
+    const fitDist = centerAndFit(object, camera, /*frame*/ 0.86);
+    controls.minDistance = fitDist * 0.28;  // how close you can zoom
+    controls.maxDistance = fitDist * 3.6;   // how far you can zoom out
+    controls.update();
+
+    scene.add(object);
+  }, undefined, (err) => {
+    console.error('[viz3d] Model load error:', err);
+  });
+
+  // Double-click to refit and restart idle orbit countdown
+  renderer.domElement.addEventListener('dblclick', () => {
+    controls.reset();
+    kickIdleTimer();
+  });
+
+  // Render loop
+  (function animate(){
+    requestAnimationFrame(animate);
     controls.update();
     renderer.render(scene, camera);
-    requestAnimationFrame(tick);
   })();
 }
 
-export function mountVizModels(map){
-  Object.entries(map).forEach(([id, v])=>{
-    if (typeof v === 'string') mountGLB(id, v);
-    else mountGLB(id, v.url, v.options || {});
+// Center the object at origin and fit it to the view.
+function centerAndFit(object, cam, frame = 0.9) {
+  const box = new THREE.Box3().setFromObject(object);
+  const size = new THREE.Vector3();
+  const center = new THREE.Vector3();
+  box.getSize(size);
+  box.getCenter(center);
+
+  object.position.sub(center); // center it
+
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const vFov = THREE.MathUtils.degToRad(cam.fov);
+  const fitHeightDist = (maxDim / frame) / (2 * Math.tan(vFov / 2));
+  const fitWidthDist  = fitHeightDist / cam.aspect;
+  const dist = 1.08 * Math.max(fitHeightDist, fitWidthDist); // small padding
+
+  cam.position.set(0, 0, dist);
+  cam.near = Math.max(0.01, dist / 1000);
+  cam.far  = dist * 2000;
+  cam.updateProjectionMatrix();
+
+  return dist;
+}
+
+// Public API: pass a map of canvasId -> modelUrl
+export function mountVizModels(map) {
+  Object.entries(map).forEach(([id, url]) => {
+    const canvas = document.getElementById(id);
+    if (!canvas) { console.warn('[viz3d] No canvas:', id); return; }
+    makeViewer(canvas, url, {});
   });
 }

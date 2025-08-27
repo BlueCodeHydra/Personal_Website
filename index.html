@@ -186,7 +186,7 @@
         <!-- Servers & Networks -->
         <div class="panel two-col skill-row">
             <div class="viz-slot">
-            <div class="viz-head">Networks Visual: Need to ADD</div>
+            <div class="viz-head">Networks Visual:</div>
             <canvas id="net-visual" class="skill-visual" aria-hidden="true"></canvas>
             </div>
             <div class="group-body">
@@ -202,7 +202,7 @@
         <!-- Preferred Tools -->
         <div class="panel two-col skill-row">
             <div class="viz-slot">
-            <div class="viz-head">Tools Visual: Need to ADD</div>
+            <div class="viz-head">Tools Visual:</div>
             <canvas id="tools-visual" class="skill-visual" aria-hidden="true"></canvas>
             </div>
             <div class="group-body">
@@ -523,17 +523,20 @@
 }
 </script>
 
-
+<!-- This is for the Zoom Controls within the visuals-->
 <script type="module">
   import { mountVizModels } from './js/viz3d.js';
   mountVizModels({
     'cad-visual'  : 'assets/models/Scout2Assembly_Full.glb',
-    'robo-visual' : 'assets/models/SubScoutAssem2.glb'
-    // add more as needed
+    'robo-visual' : 'assets/models/SubScoutAssem_Modelweb1.glb',
   });
 </script>
 
 
+
+<script type="module" src="js/zoomViewer.js"></script>
+
+<script type="module" src="js/skillCanvases.js"></script>
 
 </body>
 </html>

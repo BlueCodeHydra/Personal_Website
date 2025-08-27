@@ -230,7 +230,7 @@ h1{font-size:clamp(2rem,5.2vw,3.4rem);line-height:1.1;margin:.2rem 0 1rem}
 }
 
 
-/* ===== SKILLS: Doughnut charts ===== */
+/* Doughnut charts */
 .chart-grid{
   display:grid;
   grid-template-columns:repeat(2, minmax(260px, 1fr));
@@ -273,18 +273,14 @@ h1{font-size:clamp(2rem,5.2vw,3.4rem);line-height:1.1;margin:.2rem 0 1rem}
   .chart-grid{ grid-template-columns:1fr; }
 }
 
-/* Keep the two charts from spanning full width */
+/* Keep charts from spanning full-width and overgrowing */
 .prog-panel .chart-grid{
-  max-width: 980px;       /* similar to other content rows */
-  margin-inline: auto;    /* center inside the panel */
+  max-width: 980px;
+  margin-inline: auto;
 }
-
-/* Optional: keep each chart from growing too wide on big screens */
 .prog-panel .chart-card{ max-width: 480px; }
 
-/* Mobile: fall back to one chart per row naturally via your existing @media */
-
-/* rounded “cap” at the leading end like your reference */
+/* Rounded "cap" on the animated bars */
 .bar span::after{
   content:"";
   position:absolute;
@@ -299,26 +295,34 @@ h1{font-size:clamp(2rem,5.2vw,3.4rem);line-height:1.1;margin:.2rem 0 1rem}
     0 2px 10px rgba(72,225,255,.28);
 }
 
-/* make the pill look a tad inset like the screenshot */
-.prog-panel .bar {
-  background-color: #0a1620;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+/* Inset rail look */
+.prog-panel .bar{
+  background-color:#0a1620;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
 }
 
-/* Responsive: keep rails readable on phones */
-@media (max-width: 560px){
-  .bar-row { gap: .3rem .6rem; }
-  .bar-val { font-size: .95rem; }
+@media (max-width:560px){
+  .bar-row{ gap:.3rem .6rem; }
+  .bar-val{ font-size:.95rem; }
 }
 
-/* two-column panels with left visual + right content */
+/* Two-column skill cards: left visual + right content */
 .two-col{
-  display:grid;grid-template-columns:300px 1fr;gap:1rem;align-items:stretch;
+  display:grid;
+  grid-template-columns:460px 1fr; /* wider visual column */
+  gap:1.2rem;
+  align-items:stretch;
+}
+@media (min-width:1440px){
+  .two-col{ grid-template-columns:520px 1fr; }
 }
 
-/* Visual slot */
+/* Visual slot styling */
 .viz-slot{
-  position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  position:relative;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
   background:
     radial-gradient(800px 400px at 10% 0%, rgba(72,225,255,.08), transparent 60%),
     radial-gradient(800px 400px at 90% 0%, rgba(0,255,198,.06), transparent 60%),
@@ -326,84 +330,51 @@ h1{font-size:clamp(2rem,5.2vw,3.4rem);line-height:1.1;margin:.2rem 0 1rem}
   box-shadow:var(--shadow);
 }
 .viz-slot::after{
-  content:"";position:absolute;inset:10px;border:1px solid rgba(18,52,69,.35);
-  border-radius:10px;pointer-events:none;
+  content:""; position:absolute; inset:10px;
+  border:1px solid rgba(18,52,69,.35); border-radius:10px; pointer-events:none;
 }
 .viz-slot::before{
-  content:"";position:absolute;left:50%;bottom:-30%;transform:translateX(-50%);
-  width:120%;height:65%;background:radial-gradient(ellipse at bottom, rgba(72,225,255,.22), transparent 70%);
+  content:""; position:absolute; left:50%; bottom:-30%; transform:translateX(-50%);
+  width:150%; height:65%;
+  background:radial-gradient(ellipse at bottom, rgba(72,225,255,.22), transparent 70%);
   pointer-events:none;
 }
-.viz-head{position:absolute;top:8px;left:12px;font-size:.85rem;color:var(--muted);z-index:1}
-.skill-visual{display:block;width:100%;height:200px;filter:drop-shadow(0 0 18px rgba(72,225,255,.12))}
+.viz-head{ position:absolute; top:8px; left:12px; font-size:.85rem; color:var(--muted); z-index:1; }
 
-/* Right-side content */
-.group-body h3{margin:.2rem 0 .7rem}
-.group-body h3.sub{margin-top:1rem}
+/* Bigger, responsive canvases for the 3D viewers */
+.skill-visual{
+  display:block;
+  width:100%;
+  height:420px;       /* larger default height */
+  max-height:55vh;    /* responsive cap on tall screens */
+  filter:drop-shadow(0 0 18px rgba(72,225,255,.12));
+}
+@media (max-width:900px){
+  .two-col{ grid-template-columns:1fr; }
+  .skill-visual{ height:320px; max-height:48vh; }
+}
 
-/* Tiles */
+/* Tiles + spacing cleanup */
 .tile-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
   gap:.6rem;
 }
 .tile{
-  display:inline-flex;align-items:center;justify-content:center;
-  height:38px;padding:0 .9rem;border-radius:12px;
-  border:1px solid var(--line);background:#071621;color:var(--ink);
-  font-weight:600;letter-spacing:.2px;transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  display:inline-flex; align-items:center; justify-content:center;
+  height:38px; padding:0 .9rem; border-radius:12px;
+  border:1px solid var(--line); background:#071621; color:var(--ink);
+  font-weight:600; letter-spacing:.2px;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.tile:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 8px 24px rgba(72,225,255,.14)}
-.tile.outline{border-style:dashed;color:var(--muted)}
+.tile:hover{ transform:translateY(-2px); border-color:var(--cyan); box-shadow:0 8px 24px rgba(72,225,255,.14); }
+.tile.outline{ border-style:dashed; color:var(--muted); }
 
-/* SKILLS: row spacing + clean stack */
-.skills-grid2 { gap: 1.2rem; }        /* more breathing room between panels */
-.skill-row { margin: 0; }             /* ensure no collapsed margins cause touching */
+/* Stack spacing */
+.skills-grid2{ gap:1.2rem; }
+.skill-row{ margin:0; }
+#skills .panel{ padding-bottom:1.4rem; }
 
-/* Two-column visuals (left) already defined for .two-col, just unify sizes here */
-.two-col { grid-template-columns: 300px 1fr; gap: 1rem; }
-/* Bigger, responsive viz windows */
-.skill-visual{
-  display:block;
-  width:100%;
-  height:340px;      /* was 200px */
-  max-height:42vh;   /* responsive cap */
-  filter:drop-shadow(0 0 18px rgba(72,225,255,.12));
-}
-
-
-
-/* Safety: remove any legacy grids that might leak “random text” from old markup */
-.viz-grid, .right-col { display: none !important; }
-
-
-/* ===== Spacing for the Skills stack ===== */
-:root { --skills-gap: 1.25rem; }              /* tweak this value to taste */
-
-.skills-stack { row-gap: var(--skills-gap); } /* space between panels */
-
-/* Fallback in case any panels are not inside .skills-stack */
-#skills .skill-row + .skill-row { margin-top: var(--skills-gap); }
-
-/* A bit more room inside the CAD/Robotics/App cards */
-.two-col { gap: 1.2rem; }                     /* space between left viz + right content */
-
-/* Slightly larger bottom padding so borders don’t feel tight */
-#skills .panel { padding-bottom: 1.4rem; }
-
-/* Extra breathing room around the charts row */
-.prog-panel .chart-grid { margin: .5rem auto; gap: 1rem; }
-
-
-/* Bigger visual column + taller canvas */
-.two-col { grid-template-columns: 380px 1fr; }     /* was 300px */
-.skill-visual { height: 280px; }                   /* was 200px */
-
-/* (Optional) XL screens: go even bigger */
-@media (min-width: 1280px){
-  .two-col { grid-template-columns: 420px 1fr; }
-  .skill-visual { height: 320px; }
-}
 
 
 
