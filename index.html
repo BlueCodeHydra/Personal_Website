@@ -152,7 +152,7 @@
         <!-- Robotics -->
         <div class="panel two-col skill-row">
             <div class="viz-slot">
-            <div class="viz-head">Robotics Visual: Need to ADD</div>
+            <div class="viz-head">Robotics Visual:</div>
             <canvas id="robo-visual" class="skill-visual" aria-hidden="true"></canvas>
             </div>
             <div class="group-body">
@@ -169,7 +169,7 @@
         <!-- Apps & Web -->
         <div class="panel two-col skill-row">
             <div class="viz-slot">
-            <div class="viz-head">Apps Visual: Need to ADD</div>
+            <div class="viz-head">Apps Visual:</div>
             <canvas id="apps-visual" class="skill-visual" aria-hidden="true"></canvas>
             </div>
             <div class="group-body">
@@ -512,6 +512,27 @@
   recalc();
 })();
 </script>
+
+<!-- Three.js import map (ONE source of truth) -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.162.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.162.0/examples/jsm/"
+  }
+}
+</script>
+
+
+<script type="module">
+  import { mountVizModels } from './js/viz3d.js';
+  mountVizModels({
+    'cad-visual'  : 'assets/models/Scout2Assembly_Full.glb',
+    'robo-visual' : 'assets/models/SubScoutAssem2.glb'
+    // add more as needed
+  });
+</script>
+
 
 
 </body>

@@ -362,7 +362,16 @@ h1{font-size:clamp(2rem,5.2vw,3.4rem);line-height:1.1;margin:.2rem 0 1rem}
 
 /* Two-column visuals (left) already defined for .two-col, just unify sizes here */
 .two-col { grid-template-columns: 300px 1fr; gap: 1rem; }
-.skill-visual { height: 200px; }      /* consistent visual height per row */
+/* Bigger, responsive viz windows */
+.skill-visual{
+  display:block;
+  width:100%;
+  height:340px;      /* was 200px */
+  max-height:42vh;   /* responsive cap */
+  filter:drop-shadow(0 0 18px rgba(72,225,255,.12));
+}
+
+
 
 /* Safety: remove any legacy grids that might leak “random text” from old markup */
 .viz-grid, .right-col { display: none !important; }
@@ -384,6 +393,19 @@ h1{font-size:clamp(2rem,5.2vw,3.4rem);line-height:1.1;margin:.2rem 0 1rem}
 
 /* Extra breathing room around the charts row */
 .prog-panel .chart-grid { margin: .5rem auto; gap: 1rem; }
+
+
+/* Bigger visual column + taller canvas */
+.two-col { grid-template-columns: 380px 1fr; }     /* was 300px */
+.skill-visual { height: 280px; }                   /* was 200px */
+
+/* (Optional) XL screens: go even bigger */
+@media (min-width: 1280px){
+  .two-col { grid-template-columns: 420px 1fr; }
+  .skill-visual { height: 320px; }
+}
+
+
 
 
 /* ========================================================================== */
